@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <debounce-com method="click">
+      <button @click="handler">
+        click me
+      </button>
+      <div>hello world</div>
+    </debounce-com>
+  </div>
+</body>
+<script>
+  /**
+ * 防抖函数
+ * @param {Funtion} target 需要进行防抖处理的函数
+ * @param {number} delay 延时时间，ms
+ * @returns 处理后的函数
+ */
+  function debounce(target, delay) {
+    if (typeof target !== "function") {
+      throw TypeError("the first argument must be a Function");
+    }
+    if (typeof delay !== "number" || delay < 0) {
+      delay = 500;
+    }
+    let id;
+    // 此处不能使用箭头函数，否则 argument 失效
+    return function () {
+      clearTimeout(id);
+      id = setTimeout(() => {
+        target(...arguments);
+      }, delay);
+    };
+  }
+
+</script>
+<script>
+  Vue.component("debounce-com", {
+    functional: true,
+    render(h, context) {
+      let id = null;
+      let { delay, method } = context.props;
+      if (typeof delay !== "number" || delay < 0) {
+        console.warn(" the prop delay must be a number and more then 0");
+        delay = 500; // default value
+      }
+      if (typeof method !== "string") {
+        console.error("then prop method must be string")
+        return null;
+      }
+      const childList = context.slots().default;
+      const vnode = childList[0] || null;
+      if (vnode === null) {
+        console.error("<debounce-com>必须拥有子元素")
+      }
+      const func = vnode.data.on[method];
+      if (func === undefined || func === null) {
+        console.error(`you must give me the ${method} method`)
+      }
+      vnode.data.on[method] = debounce(func, delay)
+      return vnode;
+    }
+  })
+
+  const vm = new Vue({
+    el: "#app",
+    methods: {
+      handler(e) {
+        console.log(e.target.innerHTML)
+      }
+    }
+  })
+</script>
+
+</html>

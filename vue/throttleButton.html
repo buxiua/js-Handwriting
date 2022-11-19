@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <throttle-button :delay="1000" @click="hello">throttle button</throttle-button>
+  </div>
+
+  <template id="throttle-button">
+    <button @click="clickHandler">
+      <slot></slot>
+    </button>
+  </template>
+</body>
+<script>
+  Vue.component("throttle-button", {
+    template: "#throttle-button",
+    props: {
+      delay: {
+        type: Number,
+        default: 500
+      }
+    },
+    data() {
+      return {
+        id: null,
+      }
+    },
+    methods: {
+      clickHandler(e) {
+        if (this.id === null) {
+          this.$emit("click", e);
+          this.id = setTimeout(() => {
+            this.id = null
+          }, this.delay);
+        }
+      }
+    }
+  })
+  const vm = new Vue({
+    el: "#app",
+    methods: {
+      hello(e) {
+        console.log("hello world");
+        console.log(e.target.innerHTML)
+      }
+    }
+  })
+</script>
+
+</html>
