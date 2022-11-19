@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <button class="btn debounce">debounce</button>
+  <button class="btn throttle">throttle</button>
+</body>
+<script src="../requirements/debounce.js"></script>
+<script src="../requirements/throttle.js"></script>
+<script>
+  function hello(e) {
+    console.log("hello world")
+    console.log(e.target.innerHTML);
+  }
+  document.querySelector(".debounce").addEventListener("click", debounce(hello, 1000))
+  document.querySelector(".throttle").addEventListener("click", throttle(hello, 1000))
+</script>
+
+</html>
