@@ -12,7 +12,7 @@ function debounce(target, delay) {
     delay = 500;
   }
   let id;
-  // 此处不能使用箭头函数，否则就argument实效
+  // 此处不能使用箭头函数，否则 argument 失效
   return function () {
     clearTimeout(id);
     id = setTimeout(() => {
